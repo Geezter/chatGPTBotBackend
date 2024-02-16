@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NULL,
+  email VARCHAR(255) UNIQUE NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  verification_code VARCHAR(6) DEFAULT NULL,
+  verification_code_expiration DATETIME DEFAULT NULL,
+  email_verified_at DATETIME DEFAULT NULL,
+  edited_at DATETIME DEFAULT NULL,
+  deleted_at DATETIME DEFAULT NULL
+);
