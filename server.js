@@ -59,8 +59,10 @@ server.post('/api/chatgpt', async (req, res) => {
     const userEmail = await verifyUser(token)
     if (userInput === '/clear') {
         const messenger = new Message(userEmail)
+        console.log(userEmail)
         await messenger.deleteMessages()
         res.send(JSON.stringify('deleted'))
+        return
     }
     try {
         const chatInstance = new Chat(userEmail)
@@ -69,6 +71,7 @@ server.post('/api/chatgpt', async (req, res) => {
         let chatResult = await chatInstance.returnAnswer()
         const chatResultInJson = JSON.stringify(chatResult)
         res.send(chatResultInJson)
+        return
     } catch (error) {
         console.error(error)
         res.status(500).send('An error occurred')
