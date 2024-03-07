@@ -8,17 +8,6 @@ const pool = mysql2.createPool({
   database: process.env.DB_NAME,
 });
 
-// Connect to the MySQL database
-/*pool.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-    return;
-  }
-  console.log('Connected to the MySQL database');
-
-  
-});*/
-
 const createTableUserScript = fs.readFileSync('./config/create_table_user.sql', 'utf8');
 const createTableMessagesScript = fs.readFileSync('./config/create_table_messages.sql', 'utf8');
 
@@ -36,8 +25,4 @@ const createTables = async (script, tableName) => {
 await createTables(createTableUserScript, 'user')
 await createTables(createTableMessagesScript, 'messages')
 
-
-
-
-// Export the connection object
 export default pool;

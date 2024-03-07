@@ -17,7 +17,6 @@ server.post('/api/handshake', async (req, res) => {
         if (token) {
             const userEmail = await verifyUser(token)
             const user = new User(userEmail)
-            //await user.createUser()
             const userVerified = await user.checkIsUserEmailVerified(userEmail)
             if (!userVerified) {
                 await user.sendVerificationEmail()
@@ -82,9 +81,13 @@ server.post('/api/login', async (req, res) => {
     let token
     const userEmail = req.body.email
     try {
+
         const user = new User(userEmail)
         token = await user.createToken(userEmail)
-        await user.createUser(userEmail)
+        if (!user.getUser()) {
+            await user.createUser()
+        }
+        await user.clearVerification()
         await user.sendVerificationEmail()
     } catch (error) {
         console.error(error)
