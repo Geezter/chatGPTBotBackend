@@ -43,7 +43,7 @@ server.post('/api/getmessages', async (req, res) => {
              
                 const messenger = new Message(userEmail)
                 const rows = await messenger.getMessages()
-                res.send(JSON.stringify({ rows }))
+                res.send(JSON.stringify({ rows, userEmail }))
                 return
             }
         }
@@ -58,7 +58,6 @@ server.post('/api/chatgpt', async (req, res) => {
     const userEmail = await verifyUser(token)
     if (userInput === '/clear') {
         const messenger = new Message(userEmail)
-        console.log(userEmail)
         await messenger.deleteMessages()
         res.send(JSON.stringify('deleted'))
         return
@@ -84,17 +83,17 @@ server.post('/api/login', async (req, res) => {
 
         const user = new User(userEmail)
         token = await user.createToken(userEmail)
-        if (!user.getUser()) {
+        if (!await user.getUser()) {
             await user.createUser()
+        } else {
+            await user.clearVerification()
         }
-        await user.clearVerification()
         await user.sendVerificationEmail()
     } catch (error) {
         console.error(error)
         res.status(500).send({ error })
         return
     }
-    console.log(token)
     res.json({ 'token': token, 'useremail': userEmail })
 })
 
